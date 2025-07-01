@@ -1,12 +1,15 @@
 {
-  "name": "shopantik_ssl_backend",
+  "name": "shopantik-payment-api",
+  "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Arpan Neupane",
-  "license": "ISC",
+  "engines": {
+    "node": ">=14.x"
+  },
+  "author": "Saeed Hossain Moheb",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
