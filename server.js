@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // ✅ your Vercel frontend domain
+  origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
