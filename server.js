@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: "http://localhost:5173",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -25,17 +25,17 @@ app.get('/', (req, res) => {
 app.post('/payment/success', (req, res) => {
   const tran_id = req.body.tran_id;
   const orderId = tran_id.split('_')[1]; // Extract from "ORDER_123_..."
-  res.redirect(`${process.env.FRONTEND_URL}/payment-success?order_id=${orderId}`);
+  res.redirect(`http://localhost:5173/payment-success?order_id=${orderId}`);
 });
 
 app.post('/payment/fail', (req, res) => {
   const orderId = req.body.tran_id.split('_')[1];
-  res.redirect(`${process.env.FRONTEND_URL}/payment-failed?order_id=${orderId}`);
+  res.redirect(`http://localhost:5173/payment-failed?order_id=${orderId}`);
 });
 
 app.post('/payment/cancel', (req, res) => {
   const orderId = req.body.tran_id.split('_')[1];
-  res.redirect(`${process.env.FRONTEND_URL}/payment-cancelled?order_id=${orderId}`);
+  res.redirect(`http://localhost:5173/payment-cancelled?order_id=${orderId}`);
 });
 
 // Initialize Payment (UPDATED)
@@ -53,10 +53,10 @@ app.post('/api/payment/initiate', async (req, res) => {
             currency: 'BDT',
             tran_id: tran_id,
             // Updated to point to our server endpoints instead of frontend directly
-            success_url: `${process.env.BACKEND_URL}/payment/success`,
-            fail_url: `${process.env.BACKEND_URL}/payment/fail`,
-            cancel_url: `${process.env.BACKEND_URL}/payment/cancel`,
-            ipn_url: `${process.env.BACKEND_URL}/api/payment/ipn`,
+            success_url: `https://shopantik-ssl-backend.vercel.app/payment/success`,
+            fail_url: `https://shopantik-ssl-backend.vercel.app/payment/fail`,
+            cancel_url: `https://shopantik-ssl-backend.vercel.app/payment/cancel`,
+            ipn_url: `https://shopantik-ssl-backend.vercel.app/api/payment/ipn`,
             shipping_method: orderData.shipping_location === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka',
             product_name: cartItems.map(item => item.name).join(', '),
             product_category: 'Books',
