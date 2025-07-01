@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 
 // Update these URLs for CPanel deployment
-const FrontEndURL = "https//localhost:5173";
+const FrontEndURL = "http://localhost:5173";
 const BackEndURL = "https://shopantik-ssl-backend.onrender.com"; // Changed to your new subdomain
 
 const allowedOrigins = [
