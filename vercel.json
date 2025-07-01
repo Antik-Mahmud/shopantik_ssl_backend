@@ -3,22 +3,12 @@
   "builds": [{ "src": "server.js", "use": "@vercel/node" }],
   "routes": [
     {
-      "src": "/api/.*",
+      "src": "/.*",
       "dest": "server.js",
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE",
         "Access-Control-Allow-Headers": "X-Requested-With, Content-Type"
-      }
-    },
-    {
-      "src": "/payment/.*",
-      "dest": "server.js",
-      "methods": ["POST"],
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Headers": "Content-Type"
       }
     }
   ]
