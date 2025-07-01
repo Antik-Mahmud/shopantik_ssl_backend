@@ -5,7 +5,7 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 
 const FrontEndURL = "http://localhost:5173"
-const BackEndURL = "http://localhost:3030"
+const BackEndURL = "https://shopantik-ssl-backend.onrender.com"
 
 app.use(cors());
 app.use(express.json());
