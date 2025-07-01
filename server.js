@@ -4,16 +4,19 @@ const cors = require('cors');
 const SSLCommerzPayment = require('sslcommerz-lts');
 const app = express();
 
-// Configure CORS
-const corsOptions = {
-  origin: [
-    process.env.FRONTEND_URL
-  ],
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept");
+  next();
+});
 
-app.use(cors(corsOptions));
+//middlewares Start
+app.use(
+  cors({
+    credentials: true,
+    origin: ["https://shopantik-ssl-backend.vercel.app","http://localhost:5173"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Add this for form data handling
 
