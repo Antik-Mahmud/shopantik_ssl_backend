@@ -1,23 +1,36 @@
 import SSLCommerzPayment from 'sslcommerz-lts';
 import { supabase } from '../../lib/supabaseClient';
 import { sendOrderConfirmation, updateInventory } from '../../lib/helpers';
+import { setCorsHeaders, handleOptionsRequest } from '../../lib/cors';
 
 const store_id = process.env.SSLC_STORE_ID;
 const store_passwd = process.env.SSLC_STORE_PASSWORD;
-const is_live = false;
-
+const is_live = process.env.SSLC_IS_LIVE === 'true';
 
 export default async function handler(req, res) {
-    if (handleCors(req, res)) return;
+  if (req.method === 'OPTIONS') {
+    return handleOptionsRequest(res);
+  }
+  
+  setCorsHeaders(res);
+
   if (req.method !== 'POST') {
-    return res.status(405).send("Method Not Allowed");
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
   try {
     const { val_id, tran_id, status, value_a: orderId } = req.body;
 
+    if (!val_id || !tran_id || !orderId) {
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
     const validationData = await sslcz.validate({ val_id });
+
+    if (!validationData.status === 'VALID' && !validationData.status === 'VALIDATED') {
+      throw new Error('SSLCommerz validation failed');
+    }
 
     let orderUpdate = {
       payment_data: validationData,
@@ -54,14 +67,20 @@ export default async function handler(req, res) {
     if (error) throw error;
 
     if (orderUpdate.status === 'paid' || orderUpdate.status === 'processing') {
-      await sendOrderConfirmation(updatedOrder);
-      await updateInventory(updatedOrder.items);
+      await Promise.all([
+        sendOrderConfirmation(updatedOrder),
+        updateInventory(updatedOrder.items)
+      ]);
     }
 
     return res.status(200).json({ success: true });
 
   } catch (error) {
     console.error("IPN processing failed:", error);
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ 
+      success: false, 
+      message: 'IPN processing failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }
