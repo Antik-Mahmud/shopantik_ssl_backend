@@ -1,4 +1,7 @@
+import { handleCors } from "../../lib/cors";
+
 export default function handler(req, res) {
+    if (handleCors(req, res)) return;
   if (req.method !== 'POST') {
     return res.status(405).send("Method Not Allowed");
   }

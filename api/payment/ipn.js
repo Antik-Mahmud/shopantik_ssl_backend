@@ -6,7 +6,9 @@ const store_id = process.env.SSLC_STORE_ID;
 const store_passwd = process.env.SSLC_STORE_PASSWORD;
 const is_live = false;
 
+
 export default async function handler(req, res) {
+    if (handleCors(req, res)) return;
   if (req.method !== 'POST') {
     return res.status(405).send("Method Not Allowed");
   }
